@@ -1,6 +1,5 @@
-# copy this file to class2_multiome.R
+
 # R4.1.3 Seurat 4.1.0
-setwd("/mctp/share/users/yupingz/projects/abhijit_multiome/class2_young_old/")
 
 # library ids
 ids <- readRDS("class2.young.old.ids.rds")
@@ -8,8 +7,8 @@ ids <- readRDS("class2.young.old.ids.rds")
 # read floating-RNA corrected (by SoupX) counts
 rna.srt <- lapply(ids, function(x) {
   print(x)
-  s = readRDS(paste0("/mctp/share/users/yupingz/projects/sc_pipeline/", x, "/data/ambient.soupX.rds"))[[2]]
-  m = read.csv(paste0("/mctp/share/users/yupingz/projects/sc_pipeline/", x, "/data/cellannot_filt.csv"),
+  s = readRDS(paste0("./sc_pipeline/", x, "/data/ambient.soupX.rds"))[[2]]
+  m = read.csv(paste0("./sc_pipeline/", x, "/data/cellannot_filt.csv"),
                stringsAsFactors = F, row.names = 1)
   s = s[,rownames(m)]
   s = CreateSeuratObject(counts = s)
@@ -50,7 +49,7 @@ pool$age <-  smp$age[match(pool$library, smp$library)]
 pool <-  sc.proc(pool)
 
 # annotate using reference dataset from Crowley et al
-crowley <-  readRDS("/mctp/share/users/yupingz/projects/sc_prostate/mouse/elife_paper/elif.pool.rds")
+crowley <-  readRDS("elif.pool.rds")
 i <-  which(grepl("Dying|stress|trans|prolif",crowley$anno))
 crowley <-  crowley[, -i]
 crowley <-  sc.proc(crowley, cluster = FALSE)
@@ -64,7 +63,7 @@ pool$trt <-  ifelse(pool$trt=="Case","case","ctrl")
 pool$trt <-  factor(pool$trt, levels = c("ctrl","case"))
 
 # annotate using inhouse reference data 
-mctp.ref <-  readRDS("/mctp/share/users/hanbyul/projects/sc_prostate/for_paper/figure1/whole.rds")
+mctp.ref <-  readRDS("mctp.ref.rds")
 mctp.ref <-  sc.proc(mctp.ref)
 anchors <-  FindTransferAnchors(reference = mctp.ref, query = pool,
                                dims = 1:30, reference.reduction = "pca")
