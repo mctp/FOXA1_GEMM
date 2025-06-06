@@ -12,15 +12,6 @@ get.psk = function(obj, anno, sample, keep.all.genes = FALSE, min.cell = 5, assa
   a = a[a>min.cell]
   obj = obj[, obj$anno_sample %in% names(a)]
   whole.psk = Seurat::AggregateExpression(object = obj, assays = assay, return.seurat = F, group.by = "anno_sample")
-  # whole.psk = lapply(names(a), function(x) {
-  #   if (sum(obj$anno_sample==x)>1) {
-  #     s = rowSums(obj[[assay]]$counts[,obj$anno_sample==x])
-  #   } else {
-  #     s = obj[[assay]]$counts[,obj$anno_sample==x]
-  #   }
-  #   return(s)
-  # })
-  # whole.psk = do.call(cbind, whole.psk)
   whole.psk = whole.psk[[1]]
   colnames(whole.psk) = names(a)
   if (keep.all.genes) {
